@@ -9,14 +9,24 @@ const Login = props => {
     password: '',
   });
 
+  const handleChange = event => {
+    console.log('handleChange', event);
+    event.preventDefault();
+    setUser({ ...user, [event.target.name]: event.target.value });
+  };
+
+  const handleSubmit = event => {
+    event.preventDefault();
+  };
+
   const login = event => {
     event.preventDefault();
     axios
-      .post('http://localhost:3000/api/login', user)
+      .post('http://localhost:5000/api/login', user)
       .then(res => {
         console.log(res);
         localStorage.setItem('token', res.data.payload);
-        props.history.push('/bubbles');
+        props.history.push('/colors');
       })
       .catch(error => console.log(error.response));
   };
@@ -24,17 +34,19 @@ const Login = props => {
   return (
     <>
       <h1>Please Login!</h1>
-      <form>
+      <form onSubmit={handleSubmit}>
         <input
           type='text'
-          name='usernaame'
+          name='username'
           placeholder='username'
+          onChange={handleChange}
           value={user.username}
         />
         <input
-          type='text'
+          type='password'
           name='password'
           placeholder='password'
+          onChange={handleChange}
           value={user.password}
         />
         <button onClick={login}>Log in</button>
